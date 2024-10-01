@@ -3,6 +3,7 @@ package com.hhplus.clean_architecture.entity;
 import com.hhplus.clean_architecture.entity.base.TimeBaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class Registration extends TimeBaseEntity {
+@Builder
+public class Enrollment extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "registration_id_seq_generator")
@@ -26,5 +28,5 @@ public class Registration extends TimeBaseEntity {
     private String userId;
 
     @Column(length = 20, nullable = false)
-    private String courseId;
+    private Long lectureTimeId;
 }
