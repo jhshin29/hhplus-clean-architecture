@@ -1,6 +1,5 @@
 package com.hhplus.clean_architecture.dto.response;
 
-import com.hhplus.clean_architecture.entity.LectureTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,11 +13,9 @@ public class LectureTimeListResponse {
 
     private String lectureId;
 
+    private String lectureName;
+
     private int capacity;
 
     private LocalDateTime lectureTime;
-
-    private boolean isClosed;
-
-//    private int currentRegistrations;
 }

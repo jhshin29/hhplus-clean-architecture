@@ -44,7 +44,7 @@ class EnrollmentServiceTest {
         long lectureTimeId = 1L;
         String expectedErrorString = "E500";
 
-        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 10, 0), false);
+        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 10, 0));
 
         when(lectureTimeRepository.findByIdWithLock(lectureTimeId)).thenReturn(Optional.of(lectureTime));
         when(enrollmentRepository.countByLectureTimeId(lectureTimeId)).thenReturn(30L);
@@ -62,7 +62,7 @@ class EnrollmentServiceTest {
         String userId = "userA";
         long lectureTimeId = 1L;
 
-        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 10, 0), false);
+        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 10, 0));
         Enrollment enrollment = Enrollment.builder()
                 .userId(userId)
                 .lectureTimeId(lectureTimeId)
@@ -100,7 +100,7 @@ class EnrollmentServiceTest {
         String userId = "userA";
 
         Lecture lecture = new Lecture("clean_architecture", "클린 아키텍처", "로이");
-        LectureTime lectureTime = new LectureTime(1L, "clean_architecture", 30, LocalDateTime.of(2024, 10, 5, 14, 0), false);
+        LectureTime lectureTime = new LectureTime(1L, "clean_architecture", 30, LocalDateTime.of(2024, 10, 5, 14, 0));
         Enrollment enrollment = new Enrollment(1L, userId, 1L);
 
         when(enrollmentRepository.findByUserId(userId)).thenReturn(List.of(enrollment));

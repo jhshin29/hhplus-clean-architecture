@@ -40,11 +40,6 @@ public class EnrollmentService {
             throw new LectureFullException("강의의 최대 인원에 도달했습니다.");
         }
 
-//        lectureTime.checkAndCloseIfFull(currentEnrollments);
-//
-//        lectureTimeRepository.saveAndFlush(lectureTime);
-//        System.out.println("강의 마감여부 (저장 후): " + lectureTime.isClosed());
-
         Enrollment newEnrollment = Enrollment.builder()
                 .id(null)
                 .userId(userId)

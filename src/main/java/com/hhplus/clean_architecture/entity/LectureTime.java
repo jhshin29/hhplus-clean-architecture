@@ -29,16 +29,4 @@ public class LectureTime extends TimeBaseEntity {
 
     @Column(nullable = false)
     private LocalDateTime lectureTime;
-
-    @Column(nullable = false)
-    @ColumnDefault("false")
-    private boolean isClosed;
-
-    public void checkAndCloseIfFull(long currentRegistrations) {
-        if (currentRegistrations >= this.capacity) {
-            this.isClosed = true;
-            System.out.println("강의 마감처리");
-            throw new LectureFullException("강의의 최대 인원에 도달했습니다.");
-        }
-    }
 }
