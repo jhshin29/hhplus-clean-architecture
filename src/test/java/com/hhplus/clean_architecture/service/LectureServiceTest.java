@@ -1,10 +1,10 @@
 package com.hhplus.clean_architecture.service;
 
-import com.hhplus.clean_architecture.dto.response.LectureTimeListResponse;
-import com.hhplus.clean_architecture.entity.LectureTime;
-import com.hhplus.clean_architecture.repository.EnrollmentRepository;
-import com.hhplus.clean_architecture.repository.LectureRepository;
-import com.hhplus.clean_architecture.repository.LectureTimeRepository;
+import com.hhplus.clean_architecture.domain.entity.LectureTime;
+import com.hhplus.clean_architecture.domain.repository.EnrollmentRepository;
+import com.hhplus.clean_architecture.domain.repository.LectureTimeRepository;
+import com.hhplus.clean_architecture.domain.service.LectureService;
+import com.hhplus.clean_architecture.interfaces.dto.response.LectureTimeListResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,9 +22,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LectureServiceTest {
-
-    @Mock
-    private LectureRepository lectureRepository;
 
     @Mock
     private LectureTimeRepository lectureTimeRepository;
@@ -68,7 +65,7 @@ class LectureServiceTest {
 
         assertNotNull(lectureTimeList);
         assertEquals(1, lectureTimeList.size());
-        assertEquals("clean_architecture", lectureTimeList.get(0).getLectureId());
+        assertEquals("clean_architecture", lectureTimeList.get(0).lectureId());
     }
 
     @Test
@@ -86,7 +83,7 @@ class LectureServiceTest {
 
         assertNotNull(lectureTimeList);
         assertEquals(1, lectureTimeList.size());
-        assertEquals("tdd_basic", lectureTimeList.get(0).getLectureId());
+        assertEquals("tdd_basic", lectureTimeList.get(0).lectureId());
     }
 
 }

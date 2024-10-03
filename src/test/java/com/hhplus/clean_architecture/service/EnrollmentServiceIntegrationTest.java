@@ -1,12 +1,12 @@
 package com.hhplus.clean_architecture.service;
 
-import com.hhplus.clean_architecture.entity.Enrollment;
-import com.hhplus.clean_architecture.entity.LectureTime;
-import com.hhplus.clean_architecture.exception.LectureFullException;
-import com.hhplus.clean_architecture.repository.EnrollmentRepository;
-import com.hhplus.clean_architecture.repository.LectureTimeRepository;
+import com.hhplus.clean_architecture.domain.entity.Enrollment;
+import com.hhplus.clean_architecture.domain.entity.LectureTime;
+import com.hhplus.clean_architecture.domain.exception.LectureFullException;
+import com.hhplus.clean_architecture.domain.repository.EnrollmentRepository;
+import com.hhplus.clean_architecture.domain.repository.LectureTimeRepository;
+import com.hhplus.clean_architecture.domain.service.EnrollmentService;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +18,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 @Transactional

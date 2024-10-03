@@ -1,13 +1,14 @@
 package com.hhplus.clean_architecture.service;
 
-import com.hhplus.clean_architecture.dto.response.EnrollmentListResponse;
-import com.hhplus.clean_architecture.entity.Enrollment;
-import com.hhplus.clean_architecture.entity.Lecture;
-import com.hhplus.clean_architecture.entity.LectureTime;
-import com.hhplus.clean_architecture.exception.LectureFullException;
-import com.hhplus.clean_architecture.repository.EnrollmentRepository;
-import com.hhplus.clean_architecture.repository.LectureRepository;
-import com.hhplus.clean_architecture.repository.LectureTimeRepository;
+import com.hhplus.clean_architecture.domain.entity.Enrollment;
+import com.hhplus.clean_architecture.domain.entity.Lecture;
+import com.hhplus.clean_architecture.domain.entity.LectureTime;
+import com.hhplus.clean_architecture.domain.exception.LectureFullException;
+import com.hhplus.clean_architecture.domain.repository.EnrollmentRepository;
+import com.hhplus.clean_architecture.domain.repository.LectureRepository;
+import com.hhplus.clean_architecture.domain.repository.LectureTimeRepository;
+import com.hhplus.clean_architecture.domain.service.EnrollmentService;
+import com.hhplus.clean_architecture.interfaces.dto.response.EnrollmentListResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -114,9 +115,9 @@ class EnrollmentServiceTest {
         assertEquals(1, enrolledLectures.size());
 
         EnrollmentListResponse response = enrolledLectures.get(0);
-        assertEquals("클린 아키텍처", response.getLectureName());
-        assertEquals("로이", response.getTeacherName());
-        assertEquals(lectureTime.getLectureTime(), response.getLectureTime());
+        assertEquals("클린 아키텍처", response.lectureName());
+        assertEquals("로이", response.teacherName());
+        assertEquals(lectureTime.getLectureTime(), response.lectureTime());
 
         verify(enrollmentRepository, times(1)).findByUserId(userId);
         verify(lectureTimeRepository, times(1)).findByIdIn(List.of(1L));
