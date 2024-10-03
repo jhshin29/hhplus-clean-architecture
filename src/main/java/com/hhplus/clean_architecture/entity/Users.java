@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class User extends TimeBaseEntity {
+public class Users extends TimeBaseEntity {
 
     @Id
     @Column(length = 20)

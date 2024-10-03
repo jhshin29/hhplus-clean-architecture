@@ -1,12 +1,10 @@
 package com.hhplus.clean_architecture.entity;
 
 import com.hhplus.clean_architecture.entity.base.TimeBaseEntity;
-import com.hhplus.clean_architecture.exception.LectureFullException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -17,8 +15,7 @@ import java.time.LocalDateTime;
 public class LectureTime extends TimeBaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_time_id_seq_generator")
-    @SequenceGenerator(name = "course_time_id_seq_generator", sequenceName = "course_time_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 20, nullable = false)

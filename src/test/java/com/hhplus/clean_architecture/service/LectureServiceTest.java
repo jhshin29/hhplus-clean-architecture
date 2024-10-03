@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,8 +38,10 @@ class LectureServiceTest {
     @Test
     void 날짜에_신청가능한_특강목록_없는_케이스() {
         LocalDate date = LocalDate.of(2024, 10, 1);
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
 
-        when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(Collections.emptyList());
+        when(lectureTimeRepository.findByLectureTimeDate(startOfDay, endOfDay)).thenReturn(Collections.emptyList());
 
         List<LectureTimeListResponse> lectureTimeList = lectureService.getLectureTimeListByDate(date);
 
@@ -49,12 +52,14 @@ class LectureServiceTest {
     @Test
     void 날짜의_특강목록중_마감된특강_존재_케이스() {
 
-        LocalDate date = LocalDate.of(2024, 10, 6);
+        LocalDate date = LocalDate.of(2024, 10, 5);
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
 
-        LectureTime closedLecture = new LectureTime(1L, "server", 30, LocalDateTime.of(2024, 10, 6, 14, 0));
-        LectureTime openLecture = new LectureTime(2L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 6, 10, 0));
+        LectureTime closedLecture = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 12, 0));
+        LectureTime openLecture = new LectureTime(2L, "clean_architecture", 30, LocalDateTime.of(2024, 10, 5, 10, 0));
 
-        when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(List.of(closedLecture, openLecture));
+        when(lectureTimeRepository.findByLectureTimeDate(startOfDay, endOfDay)).thenReturn(List.of(closedLecture, openLecture));
 
         when(enrollmentRepository.countByLectureTimeId(closedLecture.getId())).thenReturn(30L); // 마감된 강의
         when(enrollmentRepository.countByLectureTimeId(openLecture.getId())).thenReturn(20L);
@@ -63,16 +68,18 @@ class LectureServiceTest {
 
         assertNotNull(lectureTimeList);
         assertEquals(1, lectureTimeList.size());
-        assertEquals("tdd_basic", lectureTimeList.get(0).getLectureId());
+        assertEquals("clean_architecture", lectureTimeList.get(0).getLectureId());
     }
 
     @Test
     void 해당날짜에_신청가능한_특강목록_조회_성공_케이스() {
-        LocalDate date = LocalDate.of(2024, 10, 6);
+        LocalDate date = LocalDate.of(2024, 10, 5);
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
 
-        LectureTime openLecture = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 6, 10, 0));
+        LectureTime openLecture = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 10, 0));
 
-        when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(List.of(openLecture));
+        when(lectureTimeRepository.findByLectureTimeDate(startOfDay, endOfDay)).thenReturn(List.of(openLecture));
         when(enrollmentRepository.countByLectureTimeId(openLecture.getId())).thenReturn(20L);
 
         List<LectureTimeListResponse> lectureTimeList = lectureService.getLectureTimeListByDate(date);

@@ -13,8 +13,6 @@ public class LectureTimeListResponse {
 
     private String lectureId;
 
-    private String lectureName;
-
     private int capacity;
 
     private LocalDateTime lectureTime;

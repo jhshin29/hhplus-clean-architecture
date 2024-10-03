@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Table(
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"userId", "courseId"})
+                @UniqueConstraint(columnNames = {"userId", "lectureTimeId"})
         }
 )
 @Entity
@@ -20,8 +20,7 @@ import lombok.NoArgsConstructor;
 public class Enrollment extends TimeBaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "registration_id_seq_generator")
-    @SequenceGenerator(name = "registration_id_seq_generator", sequenceName = "registration_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 20, nullable = false)
