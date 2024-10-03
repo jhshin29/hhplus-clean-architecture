@@ -36,7 +36,7 @@ class LectureServiceTest {
 
         when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(Collections.emptyList());
 
-        List<LectureTimeListResponse> lectureTimeList = lectureService.searchLectureTimeListByDate(date);
+        List<LectureTimeListResponse> lectureTimeList = lectureService.getLectureTimeListByDate(date);
 
         assertNotNull(lectureTimeList);
         assertTrue(lectureTimeList.isEmpty());
@@ -50,9 +50,9 @@ class LectureServiceTest {
         LectureTime closedLecture = new LectureTime(1L, "server", 30, 30, LocalDateTime.of(2024, 10, 6, 14, 0), true);
         LectureTime openLecture = new LectureTime(2L, "tdd_basic", 30, 20, LocalDateTime.of(2024, 10, 6, 10, 0), false);
 
-        when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(List.of(openLecture));
+        when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(List.of(closedLecture, openLecture));
 
-        List<LectureTimeListResponse> lectureTimeList = lectureService.searchLectureTimeListByDate(date);
+        List<LectureTimeListResponse> lectureTimeList = lectureService.getLectureTimeListByDate(date);
 
         assertNotNull(lectureTimeList);
         assertEquals(1, lectureTimeList.size());
@@ -67,7 +67,7 @@ class LectureServiceTest {
 
         when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(List.of(openLecture));
 
-        List<LectureTimeListResponse> lectureTimeList = lectureService.searchLectureTimeListByDate(date);
+        List<LectureTimeListResponse> lectureTimeList = lectureService.getLectureTimeListByDate(date);
 
         assertNotNull(lectureTimeList);
         assertEquals(1, lectureTimeList.size());
@@ -75,14 +75,6 @@ class LectureServiceTest {
         assertEquals("tdd_basic", lectureTimeList.get(0).getLectureId());
     }
 
-    @Test
-    void 한유저의_신청완료된_특강_목록이_없는_케이스() {
-        // 빈 목록 반환
-    }
 
-    @Test
-    void 특강신청_완료목록_조회_성공_케이스() {
-
-    }
 
 }

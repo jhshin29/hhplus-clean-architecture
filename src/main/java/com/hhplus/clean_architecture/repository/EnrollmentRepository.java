@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
-    List<Enrollment> findByUserIdAndLectureTimeId(String userId, long courseNameId);
+    List<Enrollment> findByUserId(String userId);
 }

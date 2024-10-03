@@ -1,9 +1,12 @@
 package com.hhplus.clean_architecture.service;
 
+import com.hhplus.clean_architecture.dto.response.EnrollmentListResponse;
 import com.hhplus.clean_architecture.entity.Enrollment;
+import com.hhplus.clean_architecture.entity.Lecture;
 import com.hhplus.clean_architecture.entity.LectureTime;
 import com.hhplus.clean_architecture.exception.LectureFullException;
 import com.hhplus.clean_architecture.repository.EnrollmentRepository;
+import com.hhplus.clean_architecture.repository.LectureRepository;
 import com.hhplus.clean_architecture.repository.LectureTimeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +30,9 @@ class EnrollmentServiceTest {
 
     @Mock
     private EnrollmentRepository enrollmentRepository;
+
+    @Mock
+    private LectureRepository lectureRepository;
 
     @InjectMocks
     private EnrollmentService enrollmentService;
@@ -43,11 +51,6 @@ class EnrollmentServiceTest {
                 enrollmentService.enroll(userId, lectureTimeId));
 
         assertEquals(expectedErrorString, exception.getErrorString());
-    }
-
-    @Test
-    void 특강신청인원_30명_초과되었으나_마감상태_미변경_케이스() {
-
     }
 
     @Test
@@ -73,4 +76,47 @@ class EnrollmentServiceTest {
         verify(enrollmentRepository).save(any(Enrollment.class));
     }
 
+    @Test
+    void 한유저의_신청완료된_특강_목록이_없는_케이스() {
+
+        String userId = "userA";
+
+        when(enrollmentRepository.findByUserId(userId)).thenReturn(Collections.emptyList());
+
+        List<EnrollmentListResponse> enrolledLectures = enrollmentService.getEnrolledLectures(userId);
+
+        assertNotNull(enrolledLectures);
+        assertTrue(enrolledLectures.isEmpty());
+
+        verify(enrollmentRepository, times(1)).findByUserId(userId);
+    }
+
+    @Test
+    void 특강신청_완료목록_조회_성공_케이스() {
+
+        String userId = "userA";
+
+        Lecture lecture = new Lecture("clean_architecture", "클린 아키텍처", "로이");
+        LectureTime lectureTime = new LectureTime(1L, "clean_architecture", 30, 10, LocalDateTime.of(2024, 10, 5, 14, 0), false);
+        Enrollment enrollment = new Enrollment(1L, userId, 1L);
+
+        when(enrollmentRepository.findByUserId(userId)).thenReturn(List.of(enrollment));
+        when(lectureTimeRepository.findByIdIn(List.of(1L))).thenReturn(List.of(lectureTime));
+        when(lectureRepository.findAll()).thenReturn(List.of(lecture));
+
+        List<EnrollmentListResponse> enrolledLectures = enrollmentService.getEnrolledLectures(userId);
+
+        assertNotNull(enrolledLectures);
+        assertFalse(enrolledLectures.isEmpty());
+        assertEquals(1, enrolledLectures.size());
+
+        EnrollmentListResponse response = enrolledLectures.get(0);
+        assertEquals("클린 아키텍처", response.getLectureName());
+        assertEquals("로이", response.getTeacherName());
+        assertEquals(lectureTime.getLectureTime(), response.getLectureTime());
+
+        verify(enrollmentRepository, times(1)).findByUserId(userId);
+        verify(lectureTimeRepository, times(1)).findByIdIn(List.of(1L));
+        verify(lectureRepository, times(1)).findAll();
+    }
 }

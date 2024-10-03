@@ -12,4 +12,6 @@ public interface LectureTimeRepository extends JpaRepository<LectureTime, Long> 
 
     @Query("select lt from LectureTime lt where date(lt.lectureTime) = :date and lt.isClosed = false")
     List<LectureTime> findByLectureTimeDate(@Param("date") LocalDate date);
+
+    List<LectureTime> findByIdIn(List<Long> ids);
 }

@@ -16,5 +16,5 @@ public class TimeBaseEntity {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     @ColumnDefault("CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 }

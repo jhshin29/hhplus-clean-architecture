@@ -20,7 +20,7 @@ public class LectureService {
     private final LectureTimeRepository lectureTimeRepository;
 
     @Transactional(readOnly = true)
-    public List<LectureTimeListResponse> searchLectureTimeListByDate(LocalDate date) {
+    public List<LectureTimeListResponse> getLectureTimeListByDate(LocalDate date) {
 
         List<LectureTime> lectureTimes = lectureTimeRepository.findByLectureTimeDate(date);
         if (lectureTimes == null) {
@@ -28,6 +28,7 @@ public class LectureService {
         }
 
         return lectureTimes.stream()
+                .filter(lectureTime -> !lectureTime.isClosed())
                 .map(lectureTime -> LectureTimeListResponse.builder()
                         .lectureId(lectureTime.getLectureId())
                         .capacity(lectureTime.getCapacity())
