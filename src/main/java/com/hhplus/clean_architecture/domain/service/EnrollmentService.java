@@ -29,8 +29,13 @@ public class EnrollmentService {
     @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public boolean enroll(String userId, long lectureTimeId) {
 
-        LectureTime lectureTime = lectureTimeRepository.findByIdWithLock(lectureTimeId)
+        lectureTimeRepository.findByIdWithLock(lectureTimeId)
                 .orElseThrow(() -> new EntityNotFoundException("특강 시간을 찾을 수 없습니다."));
+
+        boolean isAlreadyEnrolled = enrollmentRepository.existsByUserIdAndLectureTimeId(userId, lectureTimeId);
+        if (isAlreadyEnrolled) {
+            throw new IllegalStateException("해당 특강에 이미 신청하셨습니다.");
+        }
 
         long currentEnrollments = enrollmentRepository.countByLectureTimeId(lectureTimeId);
 

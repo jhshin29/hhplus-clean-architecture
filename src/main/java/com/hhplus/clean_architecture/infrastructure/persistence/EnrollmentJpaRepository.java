@@ -12,4 +12,6 @@ public interface EnrollmentJpaRepository extends JpaRepository<Enrollment, Long>
     List<Enrollment> findAllByLectureTimeId(Long lectureTimeId);
 
     long countByLectureTimeId(long lectureTimeId);
+
+    boolean existsByUserIdAndLectureTimeId(String userId, Long lectureTimeId);
 }

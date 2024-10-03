@@ -16,4 +16,6 @@ public interface LectureTimeRepository {
     Optional<LectureTime> findByIdWithLock(@Param("lectureTimeId") Long lectureTimeId);
 
     Optional<LectureTime> findById(long id);
+
+    LectureTime save(LectureTime lectureTime);
 }

@@ -57,6 +57,23 @@ class EnrollmentServiceTest {
     }
 
     @Test
+    void 동일한_사용자가_중복_신청_하는_경우() {
+
+        String userId = "userA";
+        long lectureTimeId = 1L;
+
+        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 10, 0));
+
+        when(lectureTimeRepository.findByIdWithLock(lectureTimeId)).thenReturn(Optional.of(lectureTime));
+        when(enrollmentRepository.existsByUserIdAndLectureTimeId(userId, lectureTimeId)).thenReturn(true);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
+                enrollmentService.enroll(userId, lectureTimeId));
+
+        assertEquals("해당 특강에 이미 신청하셨습니다.", exception.getMessage());
+    }
+
+    @Test
     void 특정유저_특강_신청_성공_케이스() {
         // 특강 신청 정원이 30명 미만일 때, 해당 유저가 이 특강에 처음 신청
 

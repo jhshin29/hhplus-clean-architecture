@@ -13,4 +13,6 @@ public interface EnrollmentRepository {
     long countByLectureTimeId(long lectureTimeId);
 
     Enrollment save(Enrollment enrollment);
+
+    boolean existsByUserIdAndLectureTimeId(String userId, long lectureTimeId);
 }
