@@ -28,22 +28,17 @@ public class LectureTime extends TimeBaseEntity {
     private int capacity;
 
     @Column(nullable = false)
-    @ColumnDefault("0")
-    private int currentRegistrations;
-
-    @Column(nullable = false)
     private LocalDateTime lectureTime;
 
     @Column(nullable = false)
     @ColumnDefault("false")
     private boolean isClosed;
 
-    public LectureTime addRegistrations() {
-        if (this.currentRegistrations >= this.capacity) {
-            throw new LectureFullException("특강 신청 인원이 이미 초과되었습니다.");
+    public void checkAndCloseIfFull(long currentRegistrations) {
+        if (currentRegistrations >= this.capacity) {
+            this.isClosed = true;
+            System.out.println("강의 마감처리");
+            throw new LectureFullException("강의의 최대 인원에 도달했습니다.");
         }
-
-        this.currentRegistrations++;
-        return this;
     }
 }

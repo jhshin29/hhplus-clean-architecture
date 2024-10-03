@@ -20,5 +20,5 @@ public class LectureTimeListResponse {
 
     private boolean isClosed;
 
-    private int currentRegistrations;
+//    private int currentRegistrations;
 }

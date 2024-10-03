@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LectureService {
 
-    private final LectureRepository lectureRepository;
     private final LectureTimeRepository lectureTimeRepository;
 
     @Transactional(readOnly = true)
@@ -34,7 +33,6 @@ public class LectureService {
                         .capacity(lectureTime.getCapacity())
                         .lectureTime(lectureTime.getLectureTime())
                         .isClosed(lectureTime.isClosed())
-                        .currentRegistrations(lectureTime.getCurrentRegistrations())
                         .build()
                 ).toList();
     }

@@ -47,8 +47,8 @@ class LectureServiceTest {
 
         LocalDate date = LocalDate.of(2024, 10, 6);
 
-        LectureTime closedLecture = new LectureTime(1L, "server", 30, 30, LocalDateTime.of(2024, 10, 6, 14, 0), true);
-        LectureTime openLecture = new LectureTime(2L, "tdd_basic", 30, 20, LocalDateTime.of(2024, 10, 6, 10, 0), false);
+        LectureTime closedLecture = new LectureTime(1L, "server", 30, LocalDateTime.of(2024, 10, 6, 14, 0), true);
+        LectureTime openLecture = new LectureTime(2L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 6, 10, 0), false);
 
         when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(List.of(closedLecture, openLecture));
 
@@ -63,7 +63,7 @@ class LectureServiceTest {
     void 해당날짜에_신청가능한_특강목록_조회_성공_케이스() {
         LocalDate date = LocalDate.of(2024, 10, 6);
 
-        LectureTime openLecture = new LectureTime(1L, "tdd_basic", 30, 20, LocalDateTime.of(2024, 10, 6, 10, 0), false);
+        LectureTime openLecture = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 6, 10, 0), false);
 
         when(lectureTimeRepository.findByLectureTimeDate(date)).thenReturn(List.of(openLecture));
 

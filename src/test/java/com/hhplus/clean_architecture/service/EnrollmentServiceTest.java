@@ -44,8 +44,10 @@ class EnrollmentServiceTest {
         long lectureTimeId = 1L;
         String expectedErrorString = "E500";
 
-        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, 30, LocalDateTime.of(2024, 10, 5, 10, 0), false);
-        when(lectureTimeRepository.findById(lectureTimeId)).thenReturn(Optional.of(lectureTime));
+        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 10, 0), false);
+
+        when(lectureTimeRepository.findByIdWithLock(lectureTimeId)).thenReturn(Optional.of(lectureTime));
+        when(enrollmentRepository.countByLectureTimeId(lectureTimeId)).thenReturn(30L);
 
         LectureFullException exception = assertThrows(LectureFullException.class, () ->
                 enrollmentService.enroll(userId, lectureTimeId));
@@ -60,20 +62,21 @@ class EnrollmentServiceTest {
         String userId = "userA";
         long lectureTimeId = 1L;
 
-        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, 28, LocalDateTime.of(2024, 10, 5, 10, 0), false);
+        LectureTime lectureTime = new LectureTime(1L, "tdd_basic", 30, LocalDateTime.of(2024, 10, 5, 10, 0), false);
         Enrollment enrollment = Enrollment.builder()
                 .userId(userId)
                 .lectureTimeId(lectureTimeId)
                 .build();
 
-        when(lectureTimeRepository.findById(lectureTimeId)).thenReturn(Optional.of(lectureTime));
+        when(lectureTimeRepository.findByIdWithLock(lectureTimeId)).thenReturn(Optional.of(lectureTime));
+        when(enrollmentRepository.countByLectureTimeId(lectureTimeId)).thenReturn(29L);
         when(enrollmentRepository.save(any(Enrollment.class))).thenReturn(enrollment);
 
-        boolean result = enrollmentService.enroll(userId, lectureTimeId);
+        boolean result = enrollmentService.enroll(userId, lectureTime.getId());
 
         assertTrue(result);
-        assertEquals(29, lectureTime.getCurrentRegistrations());
         verify(enrollmentRepository).save(any(Enrollment.class));
+        verify(enrollmentRepository).countByLectureTimeId(lectureTimeId);
     }
 
     @Test
@@ -97,7 +100,7 @@ class EnrollmentServiceTest {
         String userId = "userA";
 
         Lecture lecture = new Lecture("clean_architecture", "클린 아키텍처", "로이");
-        LectureTime lectureTime = new LectureTime(1L, "clean_architecture", 30, 10, LocalDateTime.of(2024, 10, 5, 14, 0), false);
+        LectureTime lectureTime = new LectureTime(1L, "clean_architecture", 30, LocalDateTime.of(2024, 10, 5, 14, 0), false);
         Enrollment enrollment = new Enrollment(1L, userId, 1L);
 
         when(enrollmentRepository.findByUserId(userId)).thenReturn(List.of(enrollment));

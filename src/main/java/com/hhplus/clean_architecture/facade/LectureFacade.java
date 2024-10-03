@@ -30,7 +30,6 @@ public class LectureFacade {
     }
 
     public List<EnrollmentListResponse> getEnrolledLectures(String userId) {
-        enrollmentService.getEnrolledLectures(userId);
-        return null;
+        return enrollmentService.getEnrolledLectures(userId);
     }
 }

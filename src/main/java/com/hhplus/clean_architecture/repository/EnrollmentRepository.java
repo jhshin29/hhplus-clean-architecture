@@ -8,4 +8,8 @@ import java.util.List;
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     List<Enrollment> findByUserId(String userId);
+
+    List<Enrollment> findAllByLectureTimeId(Long lectureTimeId);
+
+    long countByLectureTimeId(long lectureTimeId);
 }

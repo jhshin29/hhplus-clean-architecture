@@ -4,12 +4,16 @@ import com.hhplus.clean_architecture.dto.response.EnrollmentListResponse;
 import com.hhplus.clean_architecture.entity.Enrollment;
 import com.hhplus.clean_architecture.entity.Lecture;
 import com.hhplus.clean_architecture.entity.LectureTime;
+import com.hhplus.clean_architecture.exception.LectureFullException;
 import com.hhplus.clean_architecture.repository.EnrollmentRepository;
 import com.hhplus.clean_architecture.repository.LectureRepository;
 import com.hhplus.clean_architecture.repository.LectureTimeRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.PessimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -24,13 +28,22 @@ public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final LectureRepository lectureRepository;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public boolean enroll(String userId, long lectureTimeId) {
-        LectureTime lectureTime = lectureTimeRepository.findById(lectureTimeId)
+
+        LectureTime lectureTime = lectureTimeRepository.findByIdWithLock(lectureTimeId)
                 .orElseThrow(() -> new EntityNotFoundException("특강 시간을 찾을 수 없습니다."));
 
-        // 내가 선택한 코스가 30명이 넘었는지 lectureTime 내부에서 확인
-        lectureTime.addRegistrations();
+        long currentEnrollments = enrollmentRepository.countByLectureTimeId(lectureTimeId);
+
+        if (currentEnrollments >= 30) {
+            throw new LectureFullException("강의의 최대 인원에 도달했습니다.");
+        }
+
+//        lectureTime.checkAndCloseIfFull(currentEnrollments);
+//
+//        lectureTimeRepository.saveAndFlush(lectureTime);
+//        System.out.println("강의 마감여부 (저장 후): " + lectureTime.isClosed());
 
         Enrollment newEnrollment = Enrollment.builder()
                 .id(null)
@@ -38,6 +51,7 @@ public class EnrollmentService {
                 .lectureTimeId(lectureTimeId)
                 .build();
 
+        System.out.println("User " + newEnrollment.getUserId() + " 등록 완료.");
         enrollmentRepository.save(newEnrollment);
 
         return true;
