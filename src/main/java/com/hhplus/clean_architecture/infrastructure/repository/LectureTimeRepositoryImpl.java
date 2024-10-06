@@ -35,4 +35,9 @@ public class LectureTimeRepositoryImpl implements LectureTimeRepository {
     public Optional<LectureTime> findById(long id) {
         return lectureTimeJpaRepository.findById(id);
     }
+
+    @Override
+    public LectureTime save(LectureTime lectureTime) {
+        return lectureTimeJpaRepository.save(lectureTime);
+    }
 }

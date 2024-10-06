@@ -33,4 +33,9 @@ public class EnrollmentRepositoryImpl implements EnrollmentRepository {
     public Enrollment save(Enrollment enrollment) {
         return enrollmentJpaRepository.save(enrollment);
     }
+
+    @Override
+    public boolean existsByUserIdAndLectureTimeId(String userId, long lectureTimeId) {
+        return enrollmentJpaRepository.existsByUserIdAndLectureTimeId(userId, lectureTimeId);
+    }
 }
